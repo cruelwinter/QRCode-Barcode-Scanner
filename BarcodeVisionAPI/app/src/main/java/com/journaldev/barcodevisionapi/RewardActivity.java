@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.StrictMode;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
@@ -95,6 +96,9 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 
         OkHttpClient client = new OkHttpClient();
 
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+
+        StrictMode.setThreadPolicy(policy);
 
         doneBtnV.setOnClickListener(new View.OnClickListener() {
             @Override
