@@ -15,21 +15,25 @@ import android.widget.TextView;
 
 import java.math.BigDecimal;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener  {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     Button btnTakePicture, btnScanBarcode;
-    String[] country = { "USD", "KWD", "MOP", "JPD", "TWD"};
-    String[] rateStringList = { "8.2", "10.2", "5.2", "7.4", "4.2"};
+    String[] country = {"USD", "KWD", "MOP", "JPD", "TWD"};
+    String[] rateStringList = {"8.2", "10.2", "5.2", "7.4", "4.2"};
     TextView rateTextView;
-            TextView totalTextView;
+    TextView totalTextView;
+    Spinner spin;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
     }
+
     EditText inputAmount;
     Button confirmButton;
+
     private void initViews() {
         btnTakePicture = findViewById(R.id.btnTakePicture);
         btnScanBarcode = findViewById(R.id.btnScanBarcode);
@@ -70,14 +74,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, PictureBarcodeActivity.class));
+                startActivity(new Intent(MainActivity.this, RewardActivity.class));
             }
         });
-        Spinner spin = (Spinner) findViewById(R.id.spinner);
+        spin = (Spinner) findViewById(R.id.spinner);
         spin.setOnItemSelectedListener(this);
 
         //Creating the ArrayAdapter instance having the country list
-        ArrayAdapter aa = new ArrayAdapter(this,android.R.layout.simple_spinner_item,country);
+        ArrayAdapter aa = new ArrayAdapter(this, android.R.layout.simple_spinner_item, country);
         aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Setting the ArrayAdapter data on the Spinner
         spin.setAdapter(aa);
@@ -101,7 +105,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         rateTextView.setText(rateStringList[i]);
-        currencySelection =i;
+        currencySelection = i;
     }
 
     int currencySelection;
