@@ -108,6 +108,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
         rateTextView.setText(rateStringList[i]);
         currencySelection = i;
+
+        if (!inputAmount.getText().toString().matches("")) {
+            BigDecimal inputAmount_c = new BigDecimal(inputAmount.getText().toString());
+            BigDecimal rate_c = new BigDecimal(rateStringList[currencySelection]);
+            BigDecimal total_c = inputAmount_c.multiply(rate_c);
+            totalTextView.setText(total_c.toString());
+        }
+
     }
 
     int currencySelection;

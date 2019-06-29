@@ -135,14 +135,23 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                     public void onClick(DialogInterface dialog, int item) {
                         //setting the button text to the selected itenm from the list
 //                        button.setText(items[item]);
-                        selectedGifts.add(giftList[item]);
-                        StringBuilder text = new StringBuilder();
-                        for (int i = 0; i < selectedGifts.size(); i++) {
-                            text.append(selectedGifts.get(i)).append("\n");
+
+                        BigDecimal temp = creditTotal.subtract(new BigDecimal((item + 1) * 10));
+                        if (temp.compareTo(BigDecimal.ZERO) > 0){
+
+                            selectedGifts.add(giftList[item]);
+                            StringBuilder text = new StringBuilder();
+                            for (int i = 0; i < selectedGifts.size(); i++) {
+                                text.append(selectedGifts.get(i)).append("\n");
+                            }
+                            selectedGiftTextView.setText(text.toString());
+
+                            creditTotal.subtract(new BigDecimal((item + 1) * 10));
+                            creditTotal = creditTotal.subtract(new BigDecimal((item + 1) * 10));
+                            creditLeftTx.setText("you have credit left: " + creditTotal);
+
+
                         }
-                        selectedGiftTextView.setText(text.toString());
-                        creditTotal = creditTotal.subtract(new BigDecimal((item + 1) * 10));
-                        creditLeftTx.setText("you have credit left: " + creditTotal);
                     }
                 });
 
