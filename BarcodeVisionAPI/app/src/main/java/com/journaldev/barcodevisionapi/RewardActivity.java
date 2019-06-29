@@ -26,14 +26,29 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.common.api.Response;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.util.EntityUtils;
+
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+
+import static android.provider.ContactsContract.CommonDataKinds.Website.URL;
 
 public class RewardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
@@ -59,6 +74,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     TextView selectedGiftTextView;
     TextView creditLeftTx;
     Button clearButton;
+    Button doneBtnV;
 
     ArrayList<String> selectedGifts = new ArrayList<>();
 
@@ -75,7 +91,26 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
         creditLeftTx = findViewById(R.id.creditLeft);
         clearButton = findViewById(R.id.clear);
         topupButtonV = findViewById(R.id.topupButton);
+        doneBtnV = findViewById(R.id.doneBtn);
 
+        OkHttpClient client = new OkHttpClient();
+
+
+        doneBtnV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+
+
+                String html = getHtmlByGet("http://192.168.37.105:8080/demo/all");
+
+                System.out.println("html: "+html);
+                if (false) {
+                    startActivity(new Intent(RewardActivity.this, PictureBarcodeActivity.class));
+
+                }
+            }
+        });
 
         topupButtonV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -191,6 +226,36 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 
 
     }
+
+
+    public String getHtmlByGet(String _url){
+
+        String result = "";
+
+        HttpClient client = new DefaultHttpClient();
+        try {
+
+            HttpGet get = new HttpGet(_url);
+
+            HttpResponse response = client.execute(get);
+
+            HttpEntity resEntity = response.getEntity();
+
+            if (resEntity != null) {
+                result = EntityUtils.toString(resEntity);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            client.getConnectionManager().shutdown();
+        }
+
+
+        return result;
+
+    }
+
 
     private void initViews() {
         txtResultBody = findViewById(R.id.txtResultsBody);

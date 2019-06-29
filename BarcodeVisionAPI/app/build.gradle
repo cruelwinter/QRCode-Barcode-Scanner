@@ -1,6 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
+    useLibrary 'org.apache.http.legacy'
+
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.journaldev.barcodevisionapi"
@@ -31,4 +33,12 @@ dependencies {
     implementation 'com.google.zxing:core:3.2.0'
     // Android bootstrap
     compile 'com.beardedhen:androidbootstrap:2.3.2'
+
+    implementation("com.squareup.okhttp3:okhttp:4.0.0")
+
+    compile 'org.apache.httpcomponents:httpcore:4.4.1'
+//    compile 'org.apache.httpcomponents:httpclient:4.5'
+
+
+
 }
