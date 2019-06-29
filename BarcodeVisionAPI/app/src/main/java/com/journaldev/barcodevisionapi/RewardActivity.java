@@ -45,6 +45,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
@@ -74,6 +76,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     private static final String SAVED_INSTANCE_RESULT = "result";
 
     String[] giftList = {"$10 starbucks", "$20 welcome coupon", "$30 marketplace coupon ", "$50 mangings coupon", "$100 7-11 coupon "};
+
     String[] topupMethod = {"Octopus", "Alipay", "wechat pay"};
 
     Button giftButtonV;
@@ -91,6 +94,15 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     BigDecimal creditTotal = new BigDecimal(0);
     BigDecimal creditTotalOri = new BigDecimal(0);
 
+
+    public class CouponObj {
+        String id;
+        String name;
+        String description;
+        String price;
+    }
+
+    ArrayList<CouponObj> CouponObjListApi = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -108,6 +120,41 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
 
         StrictMode.setThreadPolicy(policy);
+
+//        "id": 2,
+//                "name": "Octopus Recharge",
+//                "externalRefCode": "AXC23423",
+//                "description": "Value recharge for Octopus.",
+//                "price": 0,
+
+
+        String rateList = RewardActivity.getHtmlByGet("http://192.168.37.105:8080/demo/tradable/getAll");
+        try {
+            JSONArray jsonArray = new JSONArray(rateList);
+
+//            JSONArray jsonArray = jsnobject.getJSONArray(rateList);
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject explrObject = jsonArray.getJSONObject(i);
+                CouponObj couponObj = new CouponObj();
+                couponObj.id = explrObject.get("id").toString();
+                couponObj.name = explrObject.get("name").toString();
+                couponObj.description = explrObject.get("description").toString();
+                couponObj.price = explrObject.get("price").toString();
+                CouponObjListApi.add(couponObj);
+            }
+
+            giftList = new String[CouponObjListApi.size()];
+
+
+            System.out.println("print obj");
+            for (int i = 0; i < CouponObjListApi.size(); i++) {
+                giftList[i] = CouponObjListApi.get(i).name;
+            }
+
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
 
         doneBtnV.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -215,7 +262,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                         //setting the button text to the selected itenm from the list
 //                        button.setText(items[item]);
 
-                        BigDecimal temp = creditTotal.subtract(new BigDecimal((item + 1) * 10));
+                        BigDecimal temp = creditTotal.subtract(new BigDecimal(CouponObjListApi.get(item).price));
                         if (temp.compareTo(BigDecimal.ZERO) > 0) {
 
                             selectedGifts.add(giftList[item]);
@@ -225,8 +272,9 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                             }
                             selectedGiftTextView.setText(text.toString());
 
-                            creditTotal.subtract(new BigDecimal((item + 1) * 10));
-                            creditTotal = creditTotal.subtract(new BigDecimal((item + 1) * 10));
+
+
+                            creditTotal = creditTotal.subtract(new BigDecimal(CouponObjListApi.get(item).price));
                             creditLeftTx.setText("you have credit left: " + creditTotal);
 
 
