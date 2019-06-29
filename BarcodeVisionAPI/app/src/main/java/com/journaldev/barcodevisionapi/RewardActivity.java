@@ -285,7 +285,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public String getHtmlByGet(String _url) {
+    public static String getHtmlByGet(String _url) {
 
         String result = "";
 

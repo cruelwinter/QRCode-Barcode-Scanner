@@ -1,6 +1,7 @@
 package com.journaldev.barcodevisionapi;
 
 import android.content.Intent;
+import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -29,6 +30,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initViews();
+
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
+        String rateList = RewardActivity.getHtmlByGet("http://192.168.37.105:8080/demo/rate/get-all");
+        System.out.println("rateList: " + rateList);
+
+
     }
 
     EditText inputAmount;
