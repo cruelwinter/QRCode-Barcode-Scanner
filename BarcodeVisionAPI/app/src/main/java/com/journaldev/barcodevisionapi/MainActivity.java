@@ -76,6 +76,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RewardActivity.class);
                 intent.putExtra("total",totalTextView.getText().toString());
+                finalMsg = spin.getSelectedItem().toString()+" "+inputAmount.getText();
+
                 startActivity(intent);
             }
         });
@@ -89,6 +91,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spin.setAdapter(aa);
         spin.setSelection(0);
     }
+
+    static public String finalMsg="";
 
     @Override
     public void onClick(View v) {

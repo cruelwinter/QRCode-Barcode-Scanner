@@ -34,6 +34,8 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import static com.journaldev.barcodevisionapi.MainActivity.finalMsg;
+
 public class PictureBarcodeActivity extends AppCompatActivity implements View.OnClickListener {
 
     Button btnOpenCamera;
@@ -47,6 +49,7 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
 
+    TextView txtResultsHeaderV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,6 +97,8 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
         txtResultBody = findViewById(R.id.txtResultsBody);
         btnOpenCamera = findViewById(R.id.btnOpenCamera);
         txtResultBody = findViewById(R.id.txtResultsBody);
+        txtResultsHeaderV = findViewById(R.id.txtResultsHeader);
+        txtResultsHeaderV.setText("you have to handle in: "+finalMsg +" into the terminal machine");
         btnOpenCamera.setOnClickListener(this);
     }
 

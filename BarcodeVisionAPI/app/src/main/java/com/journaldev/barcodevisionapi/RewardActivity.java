@@ -111,17 +111,22 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
             public void onClick(View view) {
 
 
-
-                String html = getHtmlByGet("http://192.168.37.105:8080/demo/all");
-
-                System.out.println("html: "+html);
-//                html = getHtmlByPost("http://192.168.37.105:8080/demo/basket/save",);
-                System.out.println("html: "+html);
-
-                if (false) {
-                    startActivity(new Intent(RewardActivity.this, PictureBarcodeActivity.class));
-
+//                BigDecimal val = new BigDecimal(creditTotal);
+                if (creditTotal.compareTo(BigDecimal.ZERO)!=0) {
+                    topupButtonV.callOnClick();
+                }else {
+                    if (true) {
+                        Intent intent = new Intent(RewardActivity.this, PictureBarcodeActivity.class);
+                        startActivity(intent);
+                    }
                 }
+//                String html = getHtmlByGet("http://192.168.37.105:8080/demo/all");
+
+//                System.out.println("html: "+html);
+//                html = getHtmlByPost("http://192.168.37.105:8080/demo/basket/save",);
+//                System.out.println("html: "+html);
+
+
             }
         });
 
@@ -164,6 +169,8 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 
 
         String total = getIntent().getStringExtra("total");
+        String currencyIntent = getIntent().getStringExtra("currency");
+
         creditLeftTx.setText("you have credit left: " + total);
         creditTotal = new BigDecimal(total);
         creditTotalOri = new BigDecimal(total);
