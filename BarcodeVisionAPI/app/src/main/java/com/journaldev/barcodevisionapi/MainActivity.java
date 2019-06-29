@@ -74,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         confirmButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(MainActivity.this, RewardActivity.class));
+                Intent intent = new Intent(MainActivity.this, RewardActivity.class);
+                intent.putExtra("total",totalTextView.getText().toString());
+                startActivity(intent);
             }
         });
         spin = (Spinner) findViewById(R.id.spinner);
