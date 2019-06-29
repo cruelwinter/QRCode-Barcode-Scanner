@@ -1,8 +1,9 @@
 package com.journaldev.barcodevisionapi;
 
 import android.Manifest;
-import android.app.Dialog;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -17,15 +18,11 @@ import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Adapter;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -35,9 +32,10 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class RewardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener  {
+public class RewardActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
     Button btnOpenCamera;
     TextView txtResultBody;
@@ -50,72 +48,80 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     private static final String SAVED_INSTANCE_URI = "uri";
     private static final String SAVED_INSTANCE_RESULT = "result";
 
-    String[] gift = {"$10 starbucks", "$20 welcome coupon", "$30 marketplace coupon ", "$50 mangings coupon", "$100 7-11 coupon "};
+    String[] giftList = {"$10 starbucks", "$20 welcome coupon", "$30 marketplace coupon ", "$50 mangings coupon", "$100 7-11 coupon "};
 
     Button giftButtonV;
     ListView mylistView;
     Adapter myAdapter;
+    Context context = this;
+    TextView selectedGiftTextView;
+    TextView creditLeftTx;
 
-    public class Adapter extends ArrayAdapter {
-        Context mContext;
-        int resourceID;
-        ArrayList<String> names;
-        public Adapter(Context context, int resource, ArrayList<String> objects) {
-            super(context, resource, objects);
-            this.mContext = context;
-            this.resourceID=resource;
-            this.names= objects;
-        }
+    ArrayList<String> selectedGifts = new ArrayList<>();
 
-        @Override
-        public String getItem(int position) {
-            return names.get(position);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            View row = convertView;
-            LayoutInflater inflater = LayoutInflater.from(mContext);
-            row = inflater.inflate(resourceID, parent, false);
-
-            TextView text = (TextView) row.findViewById(R.id.text);
-
-            text.setText(names.get(position));
-            return row;
-        }
-
-    }
+    BigDecimal creditTotal=new BigDecimal(0);
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.reward);
 
+
+        selectedGiftTextView = findViewById(R.id.selectedGiftTv);
+        creditLeftTx = findViewById(R.id.creditLeft);
+
+        String total = getIntent().getStringExtra("total");
+        creditLeftTx.setText("you have credit left: " + total);
+        creditTotal = new BigDecimal(total);
+
+
         giftButtonV = findViewById(R.id.giftButton);
-        giftButtonV.setOnClickListener( new View.OnClickListener() {
+        giftButtonV.setOnClickListener(new View.OnClickListener() {
+
 
             @Override
             public void onClick(View v) {
 
-                final Dialog dialog = new Dialog(RewardActivity.this);
-                dialog.setContentView(R.layout.custom_dialog);
-                dialog.setTitle("Title...");
-                mylistView= (ListView) dialog.findViewById(R.id.List);
-                myAdapter = new Adapter(RewardActivity.this,R.layout.list_view_items, gift);
-                mylistView.setAdapter(myAdapter);
-                dialog.show();
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 
+                //set the title for alert dialog
+                builder.setTitle("Choose names: ");
+
+                //set items to alert dialog. i.e. our array , which will be shown as list view in alert dialog
+                builder.setItems(giftList, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        //setting the button text to the selected itenm from the list
+//                        button.setText(items[item]);
+                        selectedGifts.add(giftList[item]);
+                        StringBuilder text = new StringBuilder();
+                        for (int i = 0; i < selectedGifts.size(); i++) {
+                            text.append(selectedGifts.get(i)).append("\n");
+                        }
+                        selectedGiftTextView.setText(text.toString());
+                        creditTotal.subtract(new BigDecimal((item+1)*10));
+                        creditLeftTx.setText("you have credit left: "+creditTotal);
+                    }
+                });
+
+                //Creating CANCEL button in alert dialog, to dismiss the dialog box when nothing is selected
+                builder.setCancelable(false)
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                //When clicked on CANCEL button the dalog will be dismissed
+                                dialog.dismiss();
+                            }
+                        });
+
+                //Creating alert dialog
+                AlertDialog alert = builder.create();
+
+                //Showingalert dialog
+                alert.show();
             }
         });
-
-
-
-
-
-
-
-
-
-
 
 
         initViews();
