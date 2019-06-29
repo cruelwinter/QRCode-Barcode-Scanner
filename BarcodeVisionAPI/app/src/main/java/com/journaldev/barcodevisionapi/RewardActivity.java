@@ -49,17 +49,22 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     private static final String SAVED_INSTANCE_RESULT = "result";
 
     String[] giftList = {"$10 starbucks", "$20 welcome coupon", "$30 marketplace coupon ", "$50 mangings coupon", "$100 7-11 coupon "};
+    String[] topupMethod = {"Octopus", "Alipay", "wechat pay"};
 
     Button giftButtonV;
+    Button topupButtonV;
     ListView mylistView;
     Adapter myAdapter;
     Context context = this;
     TextView selectedGiftTextView;
     TextView creditLeftTx;
+    Button clearButton;
 
     ArrayList<String> selectedGifts = new ArrayList<>();
 
-    BigDecimal creditTotal=new BigDecimal(0);
+    BigDecimal creditTotal = new BigDecimal(0);
+    BigDecimal creditTotalOri = new BigDecimal(0);
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,21 +73,58 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 
         selectedGiftTextView = findViewById(R.id.selectedGiftTv);
         creditLeftTx = findViewById(R.id.creditLeft);
+        clearButton = findViewById(R.id.clear);
+        topupButtonV = findViewById(R.id.topupButton);
+
+
+        topupButtonV.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                //set the title for alert dialog
+                builder.setTitle("Choose way to top all the remaining money: ");
+
+                //set items to alert dialog. i.e. our array , which will be shown as list view in alert dialog
+                builder.setItems(topupMethod, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int item) {
+                        selectedGiftTextView.setText(
+                                selectedGiftTextView.getText()
+                                        + "\n Top up " + creditTotal
+                                        + " to " + topupMethod[item]);
+                        creditTotal=new BigDecimal(0);
+                        creditLeftTx.setText("you have credit left: " + creditTotal);
+
+
+                    }
+                });
+
+                //Creating CANCEL button in alert dialog, to dismiss the dialog box when nothing is selected
+                builder.setCancelable(false)
+                        .setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int id) {
+                                //When clicked on CANCEL button the dalog will be dismissed
+                                dialog.dismiss();
+                            }
+                        });
+                AlertDialog alert = builder.create();
+                alert.show();
+            }
+        });
+
 
         String total = getIntent().getStringExtra("total");
         creditLeftTx.setText("you have credit left: " + total);
         creditTotal = new BigDecimal(total);
-
+        creditTotalOri = new BigDecimal(total);
 
         giftButtonV = findViewById(R.id.giftButton);
         giftButtonV.setOnClickListener(new View.OnClickListener() {
-
-
             @Override
             public void onClick(View v) {
-
                 final AlertDialog.Builder builder = new AlertDialog.Builder(context);
-
                 //set the title for alert dialog
                 builder.setTitle("Choose names: ");
 
@@ -99,8 +141,8 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                             text.append(selectedGifts.get(i)).append("\n");
                         }
                         selectedGiftTextView.setText(text.toString());
-                        creditTotal.subtract(new BigDecimal((item+1)*10));
-                        creditLeftTx.setText("you have credit left: "+creditTotal);
+                        creditTotal = creditTotal.subtract(new BigDecimal((item + 1) * 10));
+                        creditLeftTx.setText("you have credit left: " + creditTotal);
                     }
                 });
 
@@ -114,11 +156,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                                 dialog.dismiss();
                             }
                         });
-
-                //Creating alert dialog
                 AlertDialog alert = builder.create();
-
-                //Showingalert dialog
                 alert.show();
             }
         });
@@ -149,7 +187,18 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
         txtResultBody = findViewById(R.id.txtResultsBody);
         btnOpenCamera = findViewById(R.id.btnOpenCamera);
         txtResultBody = findViewById(R.id.txtResultsBody);
-        btnOpenCamera.setOnClickListener(this);
+//        btnOpenCamera.setOnClickListener(this);
+
+        clearButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                creditTotal = creditTotalOri;
+                creditLeftTx.setText("you have credit left: " + creditTotal);
+                selectedGiftTextView.setText("");
+
+
+            }
+        });
     }
 
     @Override
