@@ -31,6 +31,7 @@ import com.google.android.gms.common.api.Response;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
+import com.google.gson.Gson;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -194,6 +195,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
         String currencyIntent = getIntent().getStringExtra("currency");
 
         creditLeftTx.setText("you have credit left: " + total);
+
         creditTotal = new BigDecimal(total);
         creditTotalOri = new BigDecimal(total);
 

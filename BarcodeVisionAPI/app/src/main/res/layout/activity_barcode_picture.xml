@@ -40,8 +40,9 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="@dimen/activity_horizontal_margin"
         android:layout_marginTop="@dimen/activity_horizontal_margin"
-        android:text="@string/open_camera" />
+        android:layout_marginBottom="@dimen/activity_horizontal_margin"
+        android:text="@string/open_camera"
+        android:visibility="gone" />
 
 </RelativeLayout>
