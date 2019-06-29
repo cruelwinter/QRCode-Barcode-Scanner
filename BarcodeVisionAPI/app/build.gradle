@@ -37,6 +37,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:4.0.0")
 
     compile 'org.apache.httpcomponents:httpcore:4.4.1'
+    implementation 'com.google.code.gson:gson:2.8.5'
 //    compile 'org.apache.httpcomponents:httpclient:4.5'
 
 
