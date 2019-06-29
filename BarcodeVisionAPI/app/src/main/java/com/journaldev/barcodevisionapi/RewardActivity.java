@@ -112,9 +112,9 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 
 
 //                BigDecimal val = new BigDecimal(creditTotal);
-                if (creditTotal.compareTo(BigDecimal.ZERO)!=0) {
+                if (creditTotal.compareTo(BigDecimal.ZERO) != 0) {
                     topupButtonV.callOnClick();
-                }else {
+                } else {
                     if (true) {
                         Intent intent = new Intent(RewardActivity.this, PictureBarcodeActivity.class);
                         startActivity(intent);
@@ -146,7 +146,8 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                                 selectedGiftTextView.getText()
                                         + "\n Top up " + creditTotal
                                         + " to " + topupMethod[item]);
-                        creditTotal=new BigDecimal(0);
+                        MainActivity.selectedGiftsString = selectedGiftTextView.getText().toString();
+                        creditTotal = new BigDecimal(0);
                         creditLeftTx.setText("you have credit left: " + creditTotal);
 
 
@@ -192,7 +193,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 //                        button.setText(items[item]);
 
                         BigDecimal temp = creditTotal.subtract(new BigDecimal((item + 1) * 10));
-                        if (temp.compareTo(BigDecimal.ZERO) > 0){
+                        if (temp.compareTo(BigDecimal.ZERO) > 0) {
 
                             selectedGifts.add(giftList[item]);
                             StringBuilder text = new StringBuilder();
@@ -248,7 +249,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public String getHtmlByPost(String _url, String _queryKey, String _queryValue){
+    public String getHtmlByPost(String _url, String _queryKey, String _queryValue) {
 
         String result = "";
 
@@ -258,7 +259,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
             HttpPost post = new HttpPost(_url);
 
             //參數
-            if (_queryKey != ""){
+            if (_queryKey != "") {
                 List<NameValuePair> params = new ArrayList<NameValuePair>();
                 params.add(new BasicNameValuePair(_queryKey, _queryValue));
                 UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
@@ -284,7 +285,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public String getHtmlByGet(String _url){
+    public String getHtmlByGet(String _url) {
 
         String result = "";
 

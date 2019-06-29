@@ -75,9 +75,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this, RewardActivity.class);
-                intent.putExtra("total",totalTextView.getText().toString());
-                finalMsg = spin.getSelectedItem().toString()+" "+inputAmount.getText();
-
+                intent.putExtra("total", totalTextView.getText().toString());
+                finalMsg = spin.getSelectedItem().toString() + " " + inputAmount.getText();
+                // USD 88
                 startActivity(intent);
             }
         });
@@ -92,7 +92,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         spin.setSelection(0);
     }
 
-    static public String finalMsg="";
+    static public String finalMsg = "";
+    static public String selectedGiftsString = "";
+
 
     @Override
     public void onClick(View v) {
