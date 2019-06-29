@@ -34,9 +34,14 @@ import com.google.android.gms.vision.barcode.BarcodeDetector;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.HttpClient;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.ByteArrayOutputStream;
@@ -45,6 +50,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -109,6 +115,9 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                 String html = getHtmlByGet("http://192.168.37.105:8080/demo/all");
 
                 System.out.println("html: "+html);
+//                html = getHtmlByPost("http://192.168.37.105:8080/demo/basket/save",);
+                System.out.println("html: "+html);
+
                 if (false) {
                     startActivity(new Intent(RewardActivity.this, PictureBarcodeActivity.class));
 
@@ -229,6 +238,42 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
         }
 
 
+    }
+
+
+    public String getHtmlByPost(String _url, String _queryKey, String _queryValue){
+
+        String result = "";
+
+        HttpClient client = new DefaultHttpClient();
+        try {
+
+            HttpPost post = new HttpPost(_url);
+
+            //參數
+            if (_queryKey != ""){
+                List<NameValuePair> params = new ArrayList<NameValuePair>();
+                params.add(new BasicNameValuePair(_queryKey, _queryValue));
+                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
+                post.setEntity(ent);
+            }
+
+            HttpResponse responsePOST = client.execute(post);
+
+            HttpEntity resEntity = responsePOST.getEntity();
+
+            if (resEntity != null) {
+                result = EntityUtils.toString(resEntity);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            client.getConnectionManager().shutdown();
+        }
+
+
+        return result;
     }
 
 
