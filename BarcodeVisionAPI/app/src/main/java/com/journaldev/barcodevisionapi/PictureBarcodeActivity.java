@@ -50,6 +50,7 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
     private static final String SAVED_INSTANCE_RESULT = "result";
 
     TextView txtResultsHeaderV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -74,7 +75,12 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
         }
 
         QRCodeWriter writer = new QRCodeWriter();
-        String content = "test";
+        // you have to
+        String content = "Please insert "
+                + finalMsg
+                + " into the machine for the following reward: \n\n"
+                +" "+MainActivity.selectedGiftsString;
+
         try {
             BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, 512, 512);
             int width = bitMatrix.getWidth();
@@ -90,7 +96,6 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
         } catch (WriterException e) {
             e.printStackTrace();
         }
-
     }
 
     private void initViews() {
@@ -98,7 +103,7 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
         btnOpenCamera = findViewById(R.id.btnOpenCamera);
         txtResultBody = findViewById(R.id.txtResultsBody);
         txtResultsHeaderV = findViewById(R.id.txtResultsHeader);
-        txtResultsHeaderV.setText("you have to handle in: "+finalMsg +" into the terminal machine");
+        txtResultsHeaderV.setText("you have to handle in: " + finalMsg + " into the terminal machine");
         btnOpenCamera.setOnClickListener(this);
     }
 
@@ -132,8 +137,6 @@ public class PictureBarcodeActivity extends AppCompatActivity implements View.On
         if (requestCode == CAMERA_REQUEST && resultCode == RESULT_OK) {
             launchMediaScanIntent();
             try {
-
-
                 Bitmap bitmap = decodeBitmapUri(this, imageUri);
                 if (detector.isOperational() && bitmap != null) {
                     Frame frame = new Frame.Builder().setBitmap(bitmap).build();
