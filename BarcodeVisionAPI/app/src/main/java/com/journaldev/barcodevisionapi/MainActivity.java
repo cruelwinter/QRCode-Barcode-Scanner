@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener {
 
-    Button btnTakePicture, btnScanBarcode;
+    com.beardedhen.androidbootstrap.BootstrapButton btnTakePicture, btnScanBarcode;
     String[] country = {"USD", "KWD", "MOP", "JPD", "TWD"};
     String[] rateStringList = {"8.2", "10.2", "5.2", "7.4", "4.2"};
     TextView rateTextView;
@@ -32,7 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     EditText inputAmount;
-    Button confirmButton;
+    com.beardedhen.androidbootstrap.BootstrapButton confirmButton;
 
     private void initViews() {
         btnTakePicture = findViewById(R.id.btnTakePicture);
