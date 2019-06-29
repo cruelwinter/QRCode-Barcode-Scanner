@@ -47,23 +47,8 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
         txtBarcodeValue = findViewById(R.id.txtBarcodeValue);
         surfaceView = findViewById(R.id.surfaceView);
         btnAction = findViewById(R.id.btnAction);
+        btnAction.setVisibility(View.GONE);
 
-
-        btnAction.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                if (intentData.length() > 0) {
-                    if (isEmail)
-                        startActivity(new Intent(ScannedBarcodeActivity.this, EmailActivity.class).putExtra("email_address", intentData));
-                    else {
-                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(intentData)));
-                    }
-                }
-
-
-            }
-        });
     }
 
     private void initialiseDetectorsAndSources() {
@@ -137,7 +122,12 @@ public class ScannedBarcodeActivity extends AppCompatActivity {
                                 intentData = barcodes.valueAt(0).displayValue;
                                 txtBarcodeValue.setText(intentData);
 
+
                             }
+                            surfaceView.setVisibility(View.GONE);
+                            btnAction.setText(intentData);
+                            btnAction.setVisibility(View.VISIBLE);
+
                         }
                     });
 

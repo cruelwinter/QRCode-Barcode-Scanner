@@ -101,9 +101,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         switch (v.getId()) {
             case R.id.btnTakePicture:
+                // show barCode
                 startActivity(new Intent(MainActivity.this, PictureBarcodeActivity.class));
                 break;
             case R.id.btnScanBarcode:
+                // scan qr code
                 startActivity(new Intent(MainActivity.this, ScannedBarcodeActivity.class));
                 break;
         }
