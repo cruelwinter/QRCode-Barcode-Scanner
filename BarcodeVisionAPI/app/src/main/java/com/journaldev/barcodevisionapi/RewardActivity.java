@@ -39,10 +39,12 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
+import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -125,7 +127,27 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
 //                System.out.println("html: "+html);
 //                html = getHtmlByPost("http://192.168.37.105:8080/demo/basket/save",);
 //                System.out.println("html: "+html);
+                String html = getHtmlByGet("http://192.168.37.105:8080/demo/all");
 
+                System.out.println("html: " + html);
+//                List<BasicNameValuePair> basicNameValuePair = new ArrayList<BasicNameValuePair>();
+//                basicNameValuePair.add(new BasicNameValuePair("id" , "userId"));
+//                basicNameValuePair.add(new BasicNameValuePair("selectedGift" , selectedGifts.toString()));
+//                basicNameValuePair.add(new BasicNameValuePair("creditTotal" , creditTotal.toString()));
+                JSONObject jObj = new JSONObject();
+                try {
+
+                    jObj.put("id", 123);
+                    jObj.put("basketItem", selectedGifts.toString());
+                    jObj.put("status", creditTotal.toString());
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                html = getHtmlByPost("http://192.168.37.105:8080/demo/basket/save", jObj);
+                System.out.println("basket save html: " + html);
 
             }
         });
@@ -146,7 +168,6 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
                                 selectedGiftTextView.getText()
                                         + "\n Top up " + creditTotal
                                         + " to " + topupMethod[item]);
-                        MainActivity.selectedGiftsString = selectedGiftTextView.getText().toString();
                         creditTotal = new BigDecimal(0);
                         creditLeftTx.setText("you have credit left: " + creditTotal);
 
@@ -249,7 +270,7 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
     }
 
 
-    public String getHtmlByPost(String _url, String _queryKey, String _queryValue) {
+    public String getHtmlByPost(String _url, JSONObject json) {
 
         String result = "";
 
@@ -259,11 +280,15 @@ public class RewardActivity extends AppCompatActivity implements View.OnClickLis
             HttpPost post = new HttpPost(_url);
 
             //參數
-            if (_queryKey != "") {
-                List<NameValuePair> params = new ArrayList<NameValuePair>();
-                params.add(new BasicNameValuePair(_queryKey, _queryValue));
-                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(params, HTTP.UTF_8);
-                post.setEntity(ent);
+            if (json.length() > 0) {
+                System.out.println("paramssss " + json);
+
+                Gson gson = new Gson();
+                StringEntity postingString = new StringEntity(gson.toJson(json));//gson.tojson() converts your pojo to json
+                post.addHeader("content-type", "application/json");
+                post.setEntity(postingString);
+
+//                post.setEntity(ent);
             }
 
             HttpResponse responsePOST = client.execute(post);
